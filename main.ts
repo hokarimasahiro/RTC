@@ -137,6 +137,7 @@ namespace rtc {
     //% weight=70 blockGap=8
     //% blockId="setClock" block="set year %year|month %month|day %day|weekday %weekday|hour %hour|minute %minute|second %second"
     export function setClock(year: number, month: number, day: number, weekday: number, hour: number, minute: number, second: number): void {
+
         let buf = pins.createBuffer(8);
 
         if (deviceType == rtcType.rx8035) buf[0] = REG_SECOND << 4 || 0; else buf[0] = REG_SECOND;
@@ -158,6 +159,7 @@ namespace rtc {
     export function getClock(): number[] {
         let retbuf = [0, 0, 0, 0, 0, 0, 0];
         let offset: number;
+
         if (deviceType == rtcType.rx8035) offset = 1; else offset = 0;
 
         switch (deviceType) {
@@ -201,6 +203,7 @@ namespace rtc {
                 setReg(REG_CTRL, 0);
                 break;
         }
-        return testi2cr(REG_CTRL);
+        basic.pause(100);
+        return testi2cr(I2C_ADDR);
     }
 }
