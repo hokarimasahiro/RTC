@@ -158,11 +158,9 @@ namespace rtc {
         let buf = pins.createBuffer(8);
 
         if (deviceType == 5) buf[0] = REG_SECOND << 4 || 0; else buf[0] = REG_SECOND;
-        buf[REG_SECOND + 1] = DecToHex(second);
-        if (deviceType == 4) buf[REG_SECOND + 1] = buf[REG_SECOND + 1] || 0x80; // start clock
+        if (deviceType == 4) buf[REG_SECOND + 1] = DecToHex(second) || 0x80; else buf[REG_SECOND + 1] = DecToHex(second);
         buf[REG_MINUTE + 1] = DecToHex(minute);
-        buf[REG_HOUR + 1] = DecToHex(hour)
-        if (deviceType == 5) buf[REG_HOUR + 1] = buf[REG_HOUR + 1] || 0x80;     // 24H mode
+        if (deviceType == 5) buf[REG_HOUR + 1] = DecToHex(hour) || 0x80; else buf[REG_HOUR + 1] = DecToHex(hour);
         switch (deviceType) {
             case 2:
             case 3:
