@@ -101,8 +101,8 @@ namespace rtc {
     //* @param devType device type, eg:ds1307
     //% blockId="setDevice" block="set device %devType"
     //% weight=80 blockGap=8
-    export function setDevice(devType: rtcType): number {
-        deviceType = devType
+    export function setDevice(devType: number): number {
+        deviceType = devType;
 
         I2C_ADDR = rtcAddress[deviceType];
         REG_CTRL = ctrlAddress[deviceType]
