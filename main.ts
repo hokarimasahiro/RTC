@@ -159,14 +159,10 @@ namespace rtc {
 
         if (deviceType == 5) buf[0] = REG_SECOND << 4 || 0; else buf[0] = REG_SECOND;
         buf[REG_SECOND + 1] = DecToHex(second);
+        if (deviceType == 4) buf[REG_SECOND + 1] = buf[REG_SECOND + 1] || 0x80; // start clock
         buf[REG_MINUTE + 1] = DecToHex(minute);
-        switch (deviceType) {
-            case 5:         // RX8035
-                buf[REG_HOUR + 1] = DecToHex(hour) || 0x80; // 24H mode
-                break;
-            default:
-                buf[REG_HOUR + 1] = DecToHex(hour)
-        }
+        buf[REG_HOUR + 1] = DecToHex(hour)
+        if (deviceType == 5) buf[REG_HOUR + 1] = buf[REG_HOUR + 1] || 0x80;     // 24H mode
         switch (deviceType) {
             case 2:
             case 3:
