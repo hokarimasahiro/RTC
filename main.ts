@@ -157,7 +157,7 @@ namespace rtc {
     export function setClock(year: number, month: number, day: number, weekday: number, hour: number, minute: number, second: number): void {
         let buf = pins.createBuffer(8);
 
-        if (deviceType == 6) buf[0] = REG_SECOND << 4 || 0; else buf[0] = REG_SECOND;
+        if (deviceType == 5) buf[0] = REG_SECOND << 4 || 0; else buf[0] = REG_SECOND;
         buf[REG_SECOND + 1] = DecToHex(second);
         buf[REG_MINUTE + 1] = DecToHex(minute);
         switch (deviceType) {
@@ -191,7 +191,7 @@ namespace rtc {
     export function getClock(): number[] {
         let retbuf = [0, 0, 0, 0, 0, 0, 0];
         let offset: number;
-        if (deviceType == 6) offset = 1; else offset = 0;
+        if (deviceType == 5) offset = 1; else offset = 0;
 
         switch (deviceType) {
             case 5:
