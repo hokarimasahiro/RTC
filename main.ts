@@ -25,18 +25,26 @@ enum rtcType {
 namespace rtc {
     //      ds1307      ds3231      pcf2129     pcf8523     pcf85063    mcp79410    rx8085
     let rtcAddress = [0x68, 0x68, 0x51, 0x68, 0x51, 0x6f, 0x32];
-    let REG_CTRL = [0x07, 0x0e, 0x00, 0x00, 0x00, 0x07, 0x0f];
-    let REG_SECOND = [0x00, 0x00, 0x03, 0x03, 0x04, 0x00, 0x00];
-    let REG_MINUTE = [0x01, 0x01, 0x04, 0x04, 0x05, 0x01, 0x01];
-    let REG_HOUR = [0x02, 0x02, 0x05, 0x05, 0x06, 0x02, 0x02];
-    let REG_WEEKDAY = [0x03, 0x03, 0x07, 0x07, 0x08, 0x03, 0x03];
-    let REG_DAY = [0x04, 0x04, 0x06, 0x06, 0x07, 0x04, 0x04];
-    let REG_MONTH = [0x05, 0x05, 0x08, 0x08, 0x09, 0x05, 0x05];
-    let REG_YEAR = [0x06, 0x06, 0x09, 0x09, 0x0a, 0x06, 0x06];
+    let ctrlAddress = [0x07, 0x0e, 0x00, 0x00, 0x00, 0x07, 0x0f];
+    let secondAddress = [0x00, 0x00, 0x03, 0x03, 0x04, 0x00, 0x00];
+    let minuteAddress = [0x01, 0x01, 0x04, 0x04, 0x05, 0x01, 0x01];
+    let hourAddress = [0x02, 0x02, 0x05, 0x05, 0x06, 0x02, 0x02];
+    let weekdayAddress = [0x03, 0x03, 0x07, 0x07, 0x08, 0x03, 0x03];
+    let dayAddress = [0x04, 0x04, 0x06, 0x06, 0x07, 0x04, 0x04];
+    let monthAddress = [0x05, 0x05, 0x08, 0x08, 0x09, 0x05, 0x05];
+    let yearAddress = [0x06, 0x06, 0x09, 0x09, 0x0a, 0x06, 0x06];
     let weekdayStart = [1, 1, 0, 0, 0, 1, 0]
 
     let deviceType = 6;   // RX8085
     let I2C_ADDR = rtcAddress[deviceType]
+    let REG_CTRL = ctrlAddress[deviceType]
+    let REG_SECOND = secondAddress[deviceType]
+    let REG_MINUTE = minuteAddress[deviceType]
+    let REG_HOUR = hourAddress[deviceType]
+    let REG_WEEKDAY = weekdayAddress[deviceType]
+    let REG_DAY = dayAddress[deviceType]
+    let REG_MONTH = monthAddress[deviceType]
+    let REG_YEAR = yearAddress[deviceType]
 
     //% shim=rtc::testi2cr
     function testi2cr(n: number): number {
@@ -97,6 +105,15 @@ namespace rtc {
         deviceType = devType
 
         I2C_ADDR = rtcAddress[deviceType];
+        REG_CTRL = ctrlAddress[deviceType]
+        REG_SECOND = secondAddress[deviceType]
+        REG_MINUTE = minuteAddress[deviceType]
+        REG_HOUR = hourAddress[deviceType]
+        REG_WEEKDAY = weekdayAddress[deviceType]
+        REG_DAY = dayAddress[deviceType]
+        REG_MONTH = monthAddress[deviceType]
+        REG_YEAR = yearAddress[deviceType]
+
         return (start());
     }
     /**
@@ -114,14 +131,14 @@ namespace rtc {
     export function setClock(year: number, month: number, day: number, weekday: number, hour: number, minute: number, second: number): void {
         let buf = pins.createBuffer(8);
 
-        if (deviceType == 5) buf[0] = REG_SECOND[deviceType] << 4 || 0; else buf[0] = REG_SECOND[deviceType];
-        if (deviceType == 4) buf[REG_SECOND[deviceType] + 1] = DecToHex(second) || 0x80; else buf[REG_SECOND[deviceType] + 1] = DecToHex(second);
-        buf[REG_MINUTE[deviceType] + 1] = DecToHex(minute);
-        if (deviceType == 5) buf[REG_HOUR[deviceType] + 1] = DecToHex(hour) || 0x80; else buf[REG_HOUR[deviceType] + 1] = DecToHex(hour);
-        buf[REG_WEEKDAY[deviceType] + 1] = DecToHex(weekday - 1 + weekdayStart[deviceType]);
-        buf[REG_DAY[deviceType] + 1] = DecToHex(day);
-        buf[REG_MONTH[deviceType] + 1] = DecToHex(month);
-        buf[REG_YEAR[deviceType] + 1] = DecToHex(year);
+        if (deviceType == rtcType.rx8035) buf[0] = REG_SECOND << 4 || 0; else buf[0] = REG_SECOND;
+        if (deviceType == rtcType.pcf8523) buf[REG_SECOND + 1] = DecToHex(second) || 0x80; else buf[REG_SECOND + 1] = DecToHex(second);
+        buf[REG_MINUTE + 1] = DecToHex(minute);
+        if (deviceType == rtcType.rx8035) buf[REG_HOUR + 1] = DecToHex(hour) || 0x80; else buf[REG_HOUR + 1] = DecToHex(hour);
+        buf[REG_WEEKDAY + 1] = DecToHex(weekday - 1 + weekdayStart[deviceType]);
+        buf[REG_DAY + 1] = DecToHex(day);
+        buf[REG_MONTH + 1] = DecToHex(month);
+        buf[REG_YEAR + 1] = DecToHex(year);
 
         pins.i2cWriteBuffer(I2C_ADDR, buf)
     }
@@ -133,7 +150,7 @@ namespace rtc {
     export function getClock(): number[] {
         let retbuf = [0, 0, 0, 0, 0, 0, 0];
         let offset: number;
-        if (deviceType == 5) offset = 1; else offset = 0;
+        if (deviceType == rtcType.rx8035) offset = 1; else offset = 0;
 
         switch (deviceType) {
             case 5:
@@ -143,13 +160,13 @@ namespace rtc {
         }
         let buf = getRawData();
 
-        retbuf[0] = HexToDec(buf[REG_YEAR[deviceType] + offset])            // year
-        retbuf[1] = HexToDec(buf[REG_MONTH[deviceType] + offset] & 0x1f)    // month
-        retbuf[2] = HexToDec(buf[REG_DAY[deviceType] + offset] & 0x3f)      // day
-        retbuf[3] = HexToDec(buf[REG_WEEKDAY[deviceType] + offset] & 0x07) + 1 - weekdayStart[deviceType];
-        retbuf[4] = HexToDec(buf[REG_HOUR[deviceType] + offset] & 0x3f)     // hour
-        retbuf[5] = HexToDec(buf[REG_MINUTE[deviceType] + offset] & 0x7f)   // minute
-        retbuf[6] = HexToDec(buf[REG_SECOND[deviceType] + offset] & 0x7f)   // second
+        retbuf[0] = HexToDec(buf[REG_YEAR + offset])            // year
+        retbuf[1] = HexToDec(buf[REG_MONTH + offset] & 0x1f)    // month
+        retbuf[2] = HexToDec(buf[REG_DAY + offset] & 0x3f)      // day
+        retbuf[3] = HexToDec(buf[REG_WEEKDAY + offset] & 0x07) + 1 - weekdayStart[deviceType];
+        retbuf[4] = HexToDec(buf[REG_HOUR + offset] & 0x3f)     // hour
+        retbuf[5] = HexToDec(buf[REG_MINUTE + offset] & 0x7f)   // minute
+        retbuf[6] = HexToDec(buf[REG_SECOND + offset] & 0x7f)   // second
         return retbuf;
     }
     /**
@@ -173,9 +190,9 @@ namespace rtc {
     export function start(): number {
         switch (deviceType) {
             default:
-                setReg(REG_CTRL[deviceType], 0);
+                setReg(REG_CTRL, 0);
                 break;
         }
-        return testi2cr(REG_CTRL[deviceType]);
+        return testi2cr(REG_CTRL);
     }
 }
