@@ -7,31 +7,15 @@ enum rtcType {
     // % block="DS3231"
     ds3231 = 1,
     // % block="PCF2129"
-    pfc2129 = 2,
+    pcf2129 = 2,
     // % block="PCF8523"
     pcf8523 = 3,
-    // % block="MCP79410"
-    mcp79410 = 4,
-    // % block="rx8035"
-    rx8035 = 5,
     // % block="pcf85063"
-    pcf85063 = 6
-}
-enum rtcAddress {
-    // % block="DS1307"
-    ds1307 = 0x68,
-    // % block="DS3231"
-    ds3231 = 0x68,
-    // % block="PCF2129"
-    pfc2129 = 0x51,
-    // % block="PCF8523"
-    pcf8523 = 0x68,
+    pcf85063 = 4,
     // % block="MCP79410"
-    mcp79410 = 0x6f,
+    mcp79410 = 5,
     // % block="rx8035"
-    rx8035 = 0x32,
-    // % block="pcf85063"
-    pcf85063 = 0x51
+    rx8035 = 6
 }
 
 /**
@@ -39,16 +23,20 @@ enum rtcAddress {
  */
 //% weight=10 color=#800080 icon="\uf017" block="RTC"
 namespace rtc {
-    let deviceType = 5      // defualt rx8035
-    let I2C_ADDR = 0x32
-    let REG_CTRL = 0x0f
-    let REG_SECOND = 0x00
-    let REG_MINUTE = 0x01
-    let REG_HOUR = 0x02
-    let REG_WEEKDAY = 0x03
-    let REG_DAY = 0x04
-    let REG_MONTH = 0x05
-    let REG_YEAR = 0x06
+    //      ds1307      ds3231      pcf2129     pcf8523     pcf85063    mcp79410    rx8085
+    let rtcAddress = [0x68, 0x68, 0x51, 0x68, 0x51, 0x6f, 0x32];
+    let REG_CTRL = [0x07, 0x0e, 0x00, 0x00, 0x00, 0x07, 0x0f];
+    let REG_SECOND = [0x00, 0x00, 0x03, 0x03, 0x04, 0x00, 0x00];
+    let REG_MINUTE = [0x01, 0x01, 0x04, 0x04, 0x05, 0x01, 0x01];
+    let REG_HOUR = [0x02, 0x02, 0x05, 0x05, 0x06, 0x02, 0x02];
+    let REG_WEEKDAY = [0x03, 0x03, 0x07, 0x07, 0x08, 0x03, 0x03];
+    let REG_DAY = [0x04, 0x04, 0x06, 0x06, 0x07, 0x04, 0x04];
+    let REG_MONTH = [0x05, 0x05, 0x08, 0x08, 0x09, 0x05, 0x05];
+    let REG_YEAR = [0x06, 0x06, 0x09, 0x09, 0x0a, 0x06, 0x06];
+    let weekdayStart = [1, 1, 0, 0, 0, 1, 0]
+
+    let deviceType = 6;   // RX8085
+    let I2C_ADDR = rtcAddress[deviceType]
 
     //% shim=rtc::testi2cr
     function testi2cr(n: number): number {
@@ -107,52 +95,8 @@ namespace rtc {
     //% weight=80 blockGap=8
     export function setDevice(devType: rtcType): number {
         deviceType = devType
-        switch (devType) {           // select registor no
-            case 1:     // DS3231
-                REG_SECOND = 0x00; REG_MINUTE = 0x01; REG_HOUR = 0x02; REG_WEEKDAY = 0x03; REG_DAY = 0x04; REG_MONTH = 0x05; REG_YEAR = 0x06; REG_CTRL = 0x0e;
-                break;
-            case 2:     // PCF2129
-            case 3:     // PCF8523
-                REG_SECOND = 0x03; REG_MINUTE = 0x04; REG_HOUR = 0x05; REG_WEEKDAY = 0x07; REG_DAY = 0x06; REG_MONTH = 0x08; REG_YEAR = 0x09; REG_CTRL = 0x00;
-                break;
-            case 4:     // MCP79410
-                REG_SECOND = 0x00; REG_MINUTE = 0x01; REG_HOUR = 0x02; REG_WEEKDAY = 0x03; REG_DAY = 0x04; REG_MONTH = 0x05; REG_YEAR = 0x06; REG_CTRL = 0x07;
-                break;
-            case 5:     // RX8035
-                REG_SECOND = 0x00; REG_MINUTE = 0x01; REG_HOUR = 0x02; REG_WEEKDAY = 0x03; REG_DAY = 0x04; REG_MONTH = 0x05; REG_YEAR = 0x06; REG_CTRL = 0x0f;
-                break;
-            case 6:     // PCF85063
-                REG_SECOND = 0x04; REG_MINUTE = 0x05; REG_HOUR = 0x06; REG_WEEKDAY = 0x08; REG_DAY = 0x07; REG_MONTH = 0x09; REG_YEAR = 0x0a; REG_CTRL = 0x00;
-                break;
-            default:
-                REG_SECOND = 0x00; REG_MINUTE = 0x01; REG_HOUR = 0x02; REG_WEEKDAY = 0x03; REG_DAY = 0x04; REG_MONTH = 0x05; REG_YEAR = 0x06; REG_CTRL = 0x07;
-                break;
-        }
-        switch (devType) {          // select i2c slave address
-            case 0:     // DS1307
-                I2C_ADDR = 0x68;
-                break;
-            case 1:     // DS3231
-                I2C_ADDR = 0x68;
-                break;
-            case 2:     // PCF2129
-                I2C_ADDR = 0x51;
-                break;
-            case 3:     // PCF8523
-                I2C_ADDR = 0x68;
-                break;
-            case 4:     // MCP79410
-                I2C_ADDR = 0x6f;
-                break;
-            case 5:     // RX8035
-                I2C_ADDR = 0x32;
-                break;
-            case 6:     // PCF85063
-                I2C_ADDR = 0x51;
-                break;
-            default:
-                I2C_ADDR = 0x68;
-        }
+
+        I2C_ADDR = rtcAddress[deviceType];
         return (start());
     }
     /**
@@ -170,23 +114,14 @@ namespace rtc {
     export function setClock(year: number, month: number, day: number, weekday: number, hour: number, minute: number, second: number): void {
         let buf = pins.createBuffer(8);
 
-        if (deviceType == 5) buf[0] = REG_SECOND << 4 || 0; else buf[0] = REG_SECOND;
-        if (deviceType == 4) buf[REG_SECOND + 1] = DecToHex(second) || 0x80; else buf[REG_SECOND + 1] = DecToHex(second);
-        buf[REG_MINUTE + 1] = DecToHex(minute);
-        if (deviceType == 5) buf[REG_HOUR + 1] = DecToHex(hour) || 0x80; else buf[REG_HOUR + 1] = DecToHex(hour);
-        switch (deviceType) {
-            case 2:
-            case 3:
-            case 5:
-            case 6:
-                buf[REG_WEEKDAY + 1] = DecToHex(weekday - 1);
-                break;
-            default:
-                buf[REG_WEEKDAY + 1] = DecToHex(weekday);
-        }
-        buf[REG_DAY + 1] = DecToHex(day);
-        buf[REG_MONTH + 1] = DecToHex(month);
-        buf[REG_YEAR + 1] = DecToHex(year);
+        if (deviceType == 5) buf[0] = REG_SECOND[deviceType] << 4 || 0; else buf[0] = REG_SECOND[deviceType];
+        if (deviceType == 4) buf[REG_SECOND[deviceType] + 1] = DecToHex(second) || 0x80; else buf[REG_SECOND[deviceType] + 1] = DecToHex(second);
+        buf[REG_MINUTE[deviceType] + 1] = DecToHex(minute);
+        if (deviceType == 5) buf[REG_HOUR[deviceType] + 1] = DecToHex(hour) || 0x80; else buf[REG_HOUR[deviceType] + 1] = DecToHex(hour);
+        buf[REG_WEEKDAY[deviceType] + 1] = DecToHex(weekday - 1 + weekdayStart[deviceType]);
+        buf[REG_DAY[deviceType] + 1] = DecToHex(day);
+        buf[REG_MONTH[deviceType] + 1] = DecToHex(month);
+        buf[REG_YEAR[deviceType] + 1] = DecToHex(year);
 
         pins.i2cWriteBuffer(I2C_ADDR, buf)
     }
@@ -208,22 +143,13 @@ namespace rtc {
         }
         let buf = getRawData();
 
-        retbuf[0] = HexToDec(buf[REG_YEAR + offset])            // year
-        retbuf[1] = HexToDec(buf[REG_MONTH + offset] & 0x1f)    // month
-        retbuf[2] = HexToDec(buf[REG_DAY + offset] & 0x3f)      // day
-        switch (deviceType) {
-            case 2:
-            case 3:
-            case 5:
-            case 6:
-                retbuf[3] = HexToDec(buf[REG_WEEKDAY + offset] & 0x07) + 1; // org 0-6:
-                break;
-            default:
-                retbuf[3] = HexToDec(buf[REG_WEEKDAY + offset] & 0x07);     // org:1-7
-        }
-        retbuf[4] = HexToDec(buf[REG_HOUR + offset] & 0x3f)     // hour
-        retbuf[5] = HexToDec(buf[REG_MINUTE + offset] & 0x7f)   // minute
-        retbuf[6] = HexToDec(buf[REG_SECOND + offset] & 0x7f)   // second
+        retbuf[0] = HexToDec(buf[REG_YEAR[deviceType] + offset])            // year
+        retbuf[1] = HexToDec(buf[REG_MONTH[deviceType] + offset] & 0x1f)    // month
+        retbuf[2] = HexToDec(buf[REG_DAY[deviceType] + offset] & 0x3f)      // day
+        retbuf[3] = HexToDec(buf[REG_WEEKDAY[deviceType] + offset] & 0x07) + 1 - weekdayStart[deviceType];
+        retbuf[4] = HexToDec(buf[REG_HOUR[deviceType] + offset] & 0x3f)     // hour
+        retbuf[5] = HexToDec(buf[REG_MINUTE[deviceType] + offset] & 0x7f)   // minute
+        retbuf[6] = HexToDec(buf[REG_SECOND[deviceType] + offset] & 0x7f)   // second
         return retbuf;
     }
     /**
@@ -247,9 +173,9 @@ namespace rtc {
     export function start(): number {
         switch (deviceType) {
             default:
-                setReg(REG_CTRL, 0);
+                setReg(REG_CTRL[deviceType], 0);
                 break;
         }
-        return testi2cr(REG_CTRL);
+        return testi2cr(REG_CTRL[deviceType]);
     }
 }
