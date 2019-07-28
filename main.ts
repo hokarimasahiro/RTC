@@ -37,7 +37,7 @@ enum rtcAddress {
 /**
  * RTC block
  */
-//% weight=10 color=#800080 icon="\uf017" block="rx8035"
+//% weight=10 color=#800080 icon="\uf017" block="RTC"
 namespace rtc {
     let deviceType = 5      // defualt rx8035
     let I2C_ADDR = 0x32
@@ -102,7 +102,8 @@ namespace rtc {
     /**
      * set device
      */
-    //% blockId="setDevice" block="set device"
+    //* @param devType device type, eg:ds1307
+    //% blockId="setDevice" block="set device %devType"
     //% weight=80 blockGap=8
     export function setDevice(devType: rtcType): number {
         deviceType = devType
