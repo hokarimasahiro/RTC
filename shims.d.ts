@@ -1,2 +1,2 @@
-declare namespace i2c {
+declare namespace testi2c {
 }

@@ -1,6 +1,6 @@
 #include "pxt.h"
 
-namespace i2c {
+namespace testi2c {
   uint32_t test(int32_t n)
   {
 	return 1;
