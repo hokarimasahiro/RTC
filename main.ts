@@ -158,7 +158,7 @@ namespace rtc {
         let buf = pins.createBuffer(8);
 
         if (deviceType == 5) buf[0] = REG_SECOND << 4 || 0; else buf[0] = REG_SECOND;
-        buf[REG_SECOND + 1] = DecToHex(second);
+        buf[REG_SECOND + 1] = DecToHex(second) || 0x80;
         buf[REG_MINUTE + 1] = DecToHex(minute);
         switch (deviceType) {
             case 5:         // RX8035
