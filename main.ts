@@ -36,15 +36,16 @@ namespace rtc {
     let weekdayStart = [1, 1, 0, 0, 0, 1, 0];
 
     let deviceType = 6;   // RX8085
-    let I2C_ADDR = rtcAddress[deviceType]
-    let REG_CTRL = ctrlAddress[deviceType]
-    let REG_SECOND = secondAddress[deviceType]
-    let REG_MINUTE = minuteAddress[deviceType]
-    let REG_HOUR = hourAddress[deviceType]
-    let REG_WEEKDAY = weekdayAddress[deviceType]
-    let REG_DAY = dayAddress[deviceType]
-    let REG_MONTH = monthAddress[deviceType]
-    let REG_YEAR = yearAddress[deviceType]
+    let I2C_ADDR = 0x32
+    let REG_CTRL = 0x0f
+    let REG_SECOND = 0x0
+    let REG_MINUTE = 0x01
+    let REG_HOUR = 0x02
+    let REG_WEEKDAY = 0x03
+    let REG_DAY = 0x04
+    let REG_MONTH = 0x05
+    let REG_YEAR = 0x06
+    let weekStart = 1
 
     //% shim=rtc::testi2cr
     function testi2cr(n: number): number {
@@ -101,18 +102,34 @@ namespace rtc {
     //* @param devType device type, eg:ds1307
     //% blockId="setDevice" block="set device %devType"
     //% weight=80 blockGap=8
-    export function setDevice(devType: number): number {
+    export function setDevice(devType: rtcType): number {
+
         deviceType = devType;
 
-        I2C_ADDR = rtcAddress[deviceType];
-        REG_CTRL = ctrlAddress[deviceType]
-        REG_SECOND = secondAddress[deviceType]
-        REG_MINUTE = minuteAddress[deviceType]
-        REG_HOUR = hourAddress[deviceType]
-        REG_WEEKDAY = weekdayAddress[deviceType]
-        REG_DAY = dayAddress[deviceType]
-        REG_MONTH = monthAddress[deviceType]
-        REG_YEAR = yearAddress[deviceType]
+        switch (deviceType) {
+            case 0:
+                I2C_ADDR = 0x68; REG_CTRL = 0x07; REG_SECOND = 0x00; REG_MINUTE = 0x01; REG_HOUR = 0x02; REG_WEEKDAY = 0x03; REG_DAY = 0x04; REG_MONTH = 0x05; REG_YEAR = 0x06; weekStart = 1;
+                break;
+            case 1:
+                I2C_ADDR = 0x68; REG_CTRL = 0x07; REG_SECOND = 0x00; REG_MINUTE = 0x01; REG_HOUR = 0x02; REG_WEEKDAY = 0x03; REG_DAY = 0x04; REG_MONTH = 0x05; REG_YEAR = 0x06; weekStart = 1;
+                break;
+            case 2:
+                I2C_ADDR = 0x51; REG_CTRL = 0x00; REG_SECOND = 0x03; REG_MINUTE = 0x04; REG_HOUR = 0x05; REG_WEEKDAY = 0x07; REG_DAY = 0x06; REG_MONTH = 0x08; REG_YEAR = 0x09; weekStart = 0;
+                break;
+            case 3:
+                I2C_ADDR = 0x58; REG_CTRL = 0x00; REG_SECOND = 0x03; REG_MINUTE = 0x04; REG_HOUR = 0x05; REG_WEEKDAY = 0x07; REG_DAY = 0x06; REG_MONTH = 0x08; REG_YEAR = 0x09; weekStart = 0;
+                break;
+            case 4:
+                I2C_ADDR = 0x51; REG_CTRL = 0x00; REG_SECOND = 0x04; REG_MINUTE = 0x05; REG_HOUR = 0x06; REG_WEEKDAY = 0x08; REG_DAY = 0x07; REG_MONTH = 0x09; REG_YEAR = 0x0a; weekStart = 0;
+                break;
+            case 5:
+                I2C_ADDR = 0x6f; REG_CTRL = 0x07; REG_SECOND = 0x00; REG_MINUTE = 0x01; REG_HOUR = 0x02; REG_WEEKDAY = 0x03; REG_DAY = 0x04; REG_MONTH = 0x05; REG_YEAR = 0x06; weekStart = 1;
+                break;
+            case 6:
+                I2C_ADDR = 0x32; REG_CTRL = 0x0f; REG_SECOND = 0x00; REG_MINUTE = 0x01; REG_HOUR = 0x02; REG_WEEKDAY = 0x03; REG_DAY = 0x04; REG_MONTH = 0x05; REG_YEAR = 0x06; weekStart = 0;
+                break;
+            default:
+        }
 
         return (start());
     }
@@ -135,7 +152,7 @@ namespace rtc {
         if (deviceType == rtcType.pcf8523) buf[REG_SECOND + 1] = DecToHex(second) || 0x80; else buf[REG_SECOND + 1] = DecToHex(second);
         buf[REG_MINUTE + 1] = DecToHex(minute);
         if (deviceType == rtcType.rx8035) buf[REG_HOUR + 1] = DecToHex(hour) || 0x80; else buf[REG_HOUR + 1] = DecToHex(hour);
-        buf[REG_WEEKDAY + 1] = DecToHex(weekday - 1 + weekdayStart[deviceType]);
+        buf[REG_WEEKDAY + 1] = DecToHex(weekday - 1 + weekStart);
         buf[REG_DAY + 1] = DecToHex(day);
         buf[REG_MONTH + 1] = DecToHex(month);
         buf[REG_YEAR + 1] = DecToHex(year);
@@ -163,7 +180,7 @@ namespace rtc {
         retbuf[0] = HexToDec(buf[REG_YEAR + offset])            // year
         retbuf[1] = HexToDec(buf[REG_MONTH + offset] & 0x1f)    // month
         retbuf[2] = HexToDec(buf[REG_DAY + offset] & 0x3f)      // day
-        retbuf[3] = HexToDec(buf[REG_WEEKDAY + offset] & 0x07) + 1 - weekdayStart[deviceType];
+        retbuf[3] = HexToDec(buf[REG_WEEKDAY + offset] & 0x07) + 1 - weekStart;
         retbuf[4] = HexToDec(buf[REG_HOUR + offset] & 0x3f)     // hour
         retbuf[5] = HexToDec(buf[REG_MINUTE + offset] & 0x7f)   // minute
         retbuf[6] = HexToDec(buf[REG_SECOND + offset] & 0x7f)   // second

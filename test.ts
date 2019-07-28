@@ -10,3 +10,4 @@ basic.forever(function () {
 })
 basic.showNumber(rtc.testReadI2c(0x32))
 basic.pause(1000)
+rtc.setDevice(6)
