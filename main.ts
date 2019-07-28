@@ -41,7 +41,7 @@ enum rtcAddress {
 namespace rtc {
     let deviceType = 5      // defualt rx8035
     let I2C_ADDR = 0x32
-    let REG_CTRL = 0x32
+    let REG_CTRL = 0x0f
     let REG_SECOND = 0x00
     let REG_MINUTE = 0x01
     let REG_HOUR = 0x02
@@ -109,12 +109,17 @@ namespace rtc {
         deviceType = devType
         switch (devType) {           // select registor no
             case 1:     // DS3231
-            case 5:     // RX8035
                 REG_SECOND = 0x00; REG_MINUTE = 0x01; REG_HOUR = 0x02; REG_WEEKDAY = 0x03; REG_DAY = 0x04; REG_MONTH = 0x05; REG_YEAR = 0x06; REG_CTRL = 0x0e;
                 break;
             case 2:     // PCF2129
             case 3:     // PCF8523
                 REG_SECOND = 0x03; REG_MINUTE = 0x04; REG_HOUR = 0x05; REG_WEEKDAY = 0x07; REG_DAY = 0x06; REG_MONTH = 0x08; REG_YEAR = 0x09; REG_CTRL = 0x00;
+                break;
+            case 4:     // MCP79410
+                REG_SECOND = 0x00; REG_MINUTE = 0x01; REG_HOUR = 0x02; REG_WEEKDAY = 0x03; REG_DAY = 0x04; REG_MONTH = 0x05; REG_YEAR = 0x06; REG_CTRL = 0x07;
+                break;
+            case 5:     // RX8035
+                REG_SECOND = 0x00; REG_MINUTE = 0x01; REG_HOUR = 0x02; REG_WEEKDAY = 0x03; REG_DAY = 0x04; REG_MONTH = 0x05; REG_YEAR = 0x06; REG_CTRL = 0x0f;
                 break;
             case 6:     // PCF85063
                 REG_SECOND = 0x04; REG_MINUTE = 0x05; REG_HOUR = 0x06; REG_WEEKDAY = 0x08; REG_DAY = 0x07; REG_MONTH = 0x09; REG_YEAR = 0x0a; REG_CTRL = 0x00;
@@ -125,13 +130,16 @@ namespace rtc {
         }
         switch (devType) {          // select i2c slave address
             case 0:     // DS1307
+                I2C_ADDR = 0x68;
+                break;
             case 1:     // DS3231
-            case 3:     // PCF8523
                 I2C_ADDR = 0x68;
                 break;
             case 2:     // PCF2129
-            case 6:     // PCF85063
                 I2C_ADDR = 0x51;
+                break;
+            case 3:     // PCF8523
+                I2C_ADDR = 0x68;
                 break;
             case 4:     // MCP79410
                 I2C_ADDR = 0x6f;
@@ -139,6 +147,11 @@ namespace rtc {
             case 5:     // RX8035
                 I2C_ADDR = 0x32;
                 break;
+            case 6:     // PCF85063
+                I2C_ADDR = 0x51;
+                break;
+            default:
+                I2C_ADDR = 0x68;
         }
         return (start());
     }
