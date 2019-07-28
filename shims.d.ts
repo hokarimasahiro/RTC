@@ -1,2 +1,2 @@
-declare namespace testi2c {
+declare namespace rtc {
 }
