@@ -96,25 +96,25 @@ namespace rtc {
         deviceType = devType;
 
         switch (deviceType) {
-            case 0:
+            case 0:     // DS1307
                 I2C_ADDR = 0x68; REG_CTRL = 0x07; REG_SECOND = 0x00; REG_MINUTE = 0x01; REG_HOUR = 0x02; REG_WEEKDAY = 0x03; REG_DAY = 0x04; REG_MONTH = 0x05; REG_YEAR = 0x06; weekStart = 1;
                 break;
-            case 1:
+            case 1:     // DS3231
                 I2C_ADDR = 0x68; REG_CTRL = 0x07; REG_SECOND = 0x00; REG_MINUTE = 0x01; REG_HOUR = 0x02; REG_WEEKDAY = 0x03; REG_DAY = 0x04; REG_MONTH = 0x05; REG_YEAR = 0x06; weekStart = 1;
                 break;
-            case 2:
+            case 2:     // PCF2129
                 I2C_ADDR = 0x51; REG_CTRL = 0x00; REG_SECOND = 0x03; REG_MINUTE = 0x04; REG_HOUR = 0x05; REG_WEEKDAY = 0x07; REG_DAY = 0x06; REG_MONTH = 0x08; REG_YEAR = 0x09; weekStart = 0;
                 break;
-            case 3:
+            case 3:     // PCF8523
                 I2C_ADDR = 0x58; REG_CTRL = 0x00; REG_SECOND = 0x03; REG_MINUTE = 0x04; REG_HOUR = 0x05; REG_WEEKDAY = 0x07; REG_DAY = 0x06; REG_MONTH = 0x08; REG_YEAR = 0x09; weekStart = 0;
                 break;
-            case 4:
+            case 4:     // PCF85063
                 I2C_ADDR = 0x51; REG_CTRL = 0x00; REG_SECOND = 0x04; REG_MINUTE = 0x05; REG_HOUR = 0x06; REG_WEEKDAY = 0x08; REG_DAY = 0x07; REG_MONTH = 0x09; REG_YEAR = 0x0a; weekStart = 0;
                 break;
-            case 5:
+            case 5:     // MCP79410
                 I2C_ADDR = 0x6f; REG_CTRL = 0x07; REG_SECOND = 0x00; REG_MINUTE = 0x01; REG_HOUR = 0x02; REG_WEEKDAY = 0x03; REG_DAY = 0x04; REG_MONTH = 0x05; REG_YEAR = 0x06; weekStart = 1;
                 break;
-            case 6:
+            case 6:     // RX0835
                 I2C_ADDR = 0x32; REG_CTRL = 0x0f; REG_SECOND = 0x00; REG_MINUTE = 0x01; REG_HOUR = 0x02; REG_WEEKDAY = 0x03; REG_DAY = 0x04; REG_MONTH = 0x05; REG_YEAR = 0x06; weekStart = 0;
                 break;
             default:
@@ -141,7 +141,7 @@ namespace rtc {
         let buf = pins.createBuffer(8);
 
         if (deviceType == rtcType.rx8035) buf[0] = REG_SECOND << 4 || 0; else buf[0] = REG_SECOND;
-        if (deviceType == rtcType.pcf8523) buf[REG_SECOND + 1] = DecToHex(second) || 0x80; else buf[REG_SECOND + 1] = DecToHex(second);
+        if (deviceType == rtcType.mcp79410) buf[REG_SECOND + 1] = DecToHex(second) || 0x80; else buf[REG_SECOND + 1] = DecToHex(second);
         buf[REG_MINUTE + 1] = DecToHex(minute);
         if (deviceType == rtcType.rx8035) buf[REG_HOUR + 1] = DecToHex(hour) || 0x80; else buf[REG_HOUR + 1] = DecToHex(hour);
         buf[REG_WEEKDAY + 1] = DecToHex(weekday - 1 + weekStart);
