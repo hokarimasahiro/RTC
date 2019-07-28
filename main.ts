@@ -118,6 +118,8 @@ namespace rtc {
                 I2C_ADDR = 0x32; REG_CTRL = 0x0f; REG_SECOND = 0x00; REG_MINUTE = 0x01; REG_HOUR = 0x02; REG_WEEKDAY = 0x03; REG_DAY = 0x04; REG_MONTH = 0x05; REG_YEAR = 0x06; weekStart = 0;
                 break;
             default:
+                I2C_ADDR = 0x32; REG_CTRL = 0x0f; REG_SECOND = 0x00; REG_MINUTE = 0x01; REG_HOUR = 0x02; REG_WEEKDAY = 0x03; REG_DAY = 0x04; REG_MONTH = 0x05; REG_YEAR = 0x06; weekStart = 0;
+                break;
         }
 
         return (start());
