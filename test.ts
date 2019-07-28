@@ -8,3 +8,5 @@ basic.forever(function () {
         basic.pause(300)
     }
 })
+basic.showNumber(rtc.testReadI2c(0x32))
+basic.pause(1000)
