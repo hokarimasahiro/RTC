@@ -198,12 +198,18 @@ namespace rtc {
     //% blockId="start" block="start"
     //% weight=44 blockGap=8
     export function start(): number {
+
         switch (deviceType) {
+            case 5: //MCP79410
+                if (testi2cr(I2C_ADDR)){
+                    setReg(REG_SECOND, 0)
+                }
+                setReg(REG_CTRL, 0);
+                break;
             default:
                 setReg(REG_CTRL, 0);
                 break;
         }
-        basic.pause(100);
         return testi2cr(I2C_ADDR);
     }
 }
