@@ -201,10 +201,7 @@ namespace rtc {
 
         switch (deviceType) {
             case 5: //MCP79410
-                if (testi2cr(I2C_ADDR)){
-                    setReg(REG_SECOND, 0)
-                }
-                setReg(REG_CTRL, 0);
+                setReg(REG_SECOND, getReg(REG_SECOND) || 0x80)
                 break;
             default:
                 setReg(REG_CTRL, 0);
