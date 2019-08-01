@@ -104,6 +104,7 @@ namespace rtc {
                 break;
             case rtcType.pcf2129:
                 I2C_ADDR = 0x51; REG_CTRL = 0x00; REG_SECOND = 0x03; REG_MINUTE = 0x04; REG_HOUR = 0x05; REG_WEEKDAY = 0x07; REG_DAY = 0x06; REG_MONTH = 0x08; REG_YEAR = 0x09; weekStart = 0;
+                setReg(REG_CTRL, 0x00)
                 break;
             case rtcType.pcf8523:
                 I2C_ADDR = 0x58; REG_CTRL = 0x00; REG_SECOND = 0x03; REG_MINUTE = 0x04; REG_HOUR = 0x05; REG_WEEKDAY = 0x07; REG_DAY = 0x06; REG_MONTH = 0x08; REG_YEAR = 0x09; weekStart = 0;
