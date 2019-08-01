@@ -96,25 +96,25 @@ namespace rtc {
         deviceType = devType;
 
         switch (deviceType) {
-            case 0:     // DS1307
+            case rtcType.ds1307:
                 I2C_ADDR = 0x68; REG_CTRL = 0x07; REG_SECOND = 0x00; REG_MINUTE = 0x01; REG_HOUR = 0x02; REG_WEEKDAY = 0x03; REG_DAY = 0x04; REG_MONTH = 0x05; REG_YEAR = 0x06; weekStart = 1;
                 break;
-            case 1:     // DS3231
+            case rtcType.ds3231:
                 I2C_ADDR = 0x68; REG_CTRL = 0x07; REG_SECOND = 0x00; REG_MINUTE = 0x01; REG_HOUR = 0x02; REG_WEEKDAY = 0x03; REG_DAY = 0x04; REG_MONTH = 0x05; REG_YEAR = 0x06; weekStart = 1;
                 break;
-            case 2:     // PCF2129
+            case rtcType.pcf2129:
                 I2C_ADDR = 0x51; REG_CTRL = 0x00; REG_SECOND = 0x03; REG_MINUTE = 0x04; REG_HOUR = 0x05; REG_WEEKDAY = 0x07; REG_DAY = 0x06; REG_MONTH = 0x08; REG_YEAR = 0x09; weekStart = 0;
                 break;
-            case 3:     // PCF8523
+            case rtcType.pcf8523:
                 I2C_ADDR = 0x58; REG_CTRL = 0x00; REG_SECOND = 0x03; REG_MINUTE = 0x04; REG_HOUR = 0x05; REG_WEEKDAY = 0x07; REG_DAY = 0x06; REG_MONTH = 0x08; REG_YEAR = 0x09; weekStart = 0;
                 break;
-            case 4:     // PCF85063
+            case rtcType.pcf85063:
                 I2C_ADDR = 0x51; REG_CTRL = 0x00; REG_SECOND = 0x04; REG_MINUTE = 0x05; REG_HOUR = 0x06; REG_WEEKDAY = 0x08; REG_DAY = 0x07; REG_MONTH = 0x09; REG_YEAR = 0x0a; weekStart = 0;
                 break;
-            case 5:     // MCP79410
+            case rtcType.mcp79410:
                 I2C_ADDR = 0x6f; REG_CTRL = 0x07; REG_SECOND = 0x00; REG_MINUTE = 0x01; REG_HOUR = 0x02; REG_WEEKDAY = 0x03; REG_DAY = 0x04; REG_MONTH = 0x05; REG_YEAR = 0x06; weekStart = 1;
                 break;
-            case 6:     // RX8035
+            case rtcType.rx8035:
                 I2C_ADDR = 0x32; REG_CTRL = 0x0f; REG_SECOND = 0x00; REG_MINUTE = 0x01; REG_HOUR = 0x02; REG_WEEKDAY = 0x03; REG_DAY = 0x04; REG_MONTH = 0x05; REG_YEAR = 0x06; weekStart = 0;
                 break;
             default:
@@ -163,7 +163,7 @@ namespace rtc {
         if (deviceType == rtcType.rx8035) offset = 1; else offset = 0;
 
         switch (deviceType) {
-            case 6:     // RX8035
+            case rtcType.rx8035:
                 break;
             default:
                 pins.i2cWriteNumber(I2C_ADDR, 0, NumberFormat.UInt8BE);
@@ -200,7 +200,7 @@ namespace rtc {
     export function start(): number {
 
         switch (deviceType) {
-            case 5: //MCP79410
+            case rtcType.mcp79410:
                 setReg(REG_SECOND, getReg(REG_SECOND) || 0x80)
                 break;
             default:
