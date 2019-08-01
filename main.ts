@@ -195,7 +195,8 @@ namespace rtc {
     /**
      * start
      */
-    //% blockId="start" block="start"
+    //* @param devType device type, eg:ds1307
+    //% blockId="start" block="start %devType"
     //% weight=44 blockGap=8
     export function start(devType: rtcType): number {
         setDevice(devType)
