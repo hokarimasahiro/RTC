@@ -114,7 +114,7 @@ namespace rtc {
             case 5:     // MCP79410
                 I2C_ADDR = 0x6f; REG_CTRL = 0x07; REG_SECOND = 0x00; REG_MINUTE = 0x01; REG_HOUR = 0x02; REG_WEEKDAY = 0x03; REG_DAY = 0x04; REG_MONTH = 0x05; REG_YEAR = 0x06; weekStart = 1;
                 break;
-            case 6:     // RX0835
+            case 6:     // RX8035
                 I2C_ADDR = 0x32; REG_CTRL = 0x0f; REG_SECOND = 0x00; REG_MINUTE = 0x01; REG_HOUR = 0x02; REG_WEEKDAY = 0x03; REG_DAY = 0x04; REG_MONTH = 0x05; REG_YEAR = 0x06; weekStart = 0;
                 break;
             default:
@@ -163,7 +163,7 @@ namespace rtc {
         if (deviceType == rtcType.rx8035) offset = 1; else offset = 0;
 
         switch (deviceType) {
-            case 5:
+            case 6:     // RX8035
                 break;
             default:
                 pins.i2cWriteNumber(I2C_ADDR, 0, NumberFormat.UInt8BE);
