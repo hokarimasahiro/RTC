@@ -144,7 +144,7 @@ namespace rtc {
         if (deviceType == rtcType.mcp79410) buf[REG_SECOND + 1] = DecToHex(second) || 0x80; else buf[REG_SECOND + 1] = DecToHex(second);
         buf[REG_MINUTE + 1] = DecToHex(minute);
         if (deviceType == rtcType.rx8035) buf[REG_HOUR + 1] = DecToHex(hour) || 0x80; else buf[REG_HOUR + 1] = DecToHex(hour);
-        buf[REG_WEEKDAY + 1] = DecToHex(weekday - 1 + weekStart);
+        buf[REG_WEEKDAY + 1] = DecToHex(weekday + weekStart);
         buf[REG_DAY + 1] = DecToHex(day);
         buf[REG_MONTH + 1] = DecToHex(month);
         buf[REG_YEAR + 1] = DecToHex(year);
@@ -173,7 +173,7 @@ namespace rtc {
         retbuf[0] = HexToDec(buf[REG_YEAR + offset])            // year
         retbuf[1] = HexToDec(buf[REG_MONTH + offset] & 0x1f)    // month
         retbuf[2] = HexToDec(buf[REG_DAY + offset] & 0x3f)      // day
-        retbuf[3] = HexToDec(buf[REG_WEEKDAY + offset] & 0x07) + 1 - weekStart;
+        retbuf[3] = HexToDec(buf[REG_WEEKDAY + offset] & 0x07) - weekStart;
         retbuf[4] = HexToDec(buf[REG_HOUR + offset] & 0x3f)     // hour
         retbuf[5] = HexToDec(buf[REG_MINUTE + offset] & 0x7f)   // minute
         retbuf[6] = HexToDec(buf[REG_SECOND + offset] & 0x7f)   // second
