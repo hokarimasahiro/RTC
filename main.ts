@@ -122,7 +122,7 @@ namespace rtc {
                 break;
         }
 
-        return (start());
+        return (testi2cr(I2C_ADDR));
     }
     /**
      * set clock
@@ -197,8 +197,9 @@ namespace rtc {
      */
     //% blockId="start" block="start"
     //% weight=44 blockGap=8
-    export function start(): number {
-
+    export function start(devType: rtcType): number {
+        setDevice(devType)
+        
         switch (deviceType) {
             case rtcType.mcp79410:
                 setReg(REG_SECOND, getReg(REG_SECOND) || 0x80)
