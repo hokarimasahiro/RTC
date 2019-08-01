@@ -142,14 +142,22 @@ namespace rtc {
 
         let buf = pins.createBuffer(8);
 
-        if (deviceType == rtcType.rx8035) buf[0] = REG_SECOND << 4 | 0; else buf[0] = REG_SECOND;
-        if (deviceType == rtcType.mcp79410) buf[REG_SECOND + 1] = DecToHex(second) | 0x80; else buf[REG_SECOND + 1] = DecToHex(second);
+        buf[0] = REG_SECOND;
+        buf[REG_SECOND + 1] = DecToHex(second);
         buf[REG_MINUTE + 1] = DecToHex(minute);
-        if (deviceType == rtcType.rx8035) buf[REG_HOUR + 1] = DecToHex(hour) | 0x80; else buf[REG_HOUR + 1] = DecToHex(hour);
-        if (deviceType == rtcType.mcp79410) buf[REG_WEEKDAY + 1] = DecToHex(weekday + weekStart) | 0x08; else buf[REG_WEEKDAY + 1] = DecToHex(weekday + weekStart);
+        buf[REG_HOUR + 1] = DecToHex(hour);
+        buf[REG_WEEKDAY + 1] = DecToHex(weekday + weekStart);
         buf[REG_DAY + 1] = DecToHex(day);
         buf[REG_MONTH + 1] = DecToHex(month);
         buf[REG_YEAR + 1] = DecToHex(year);
+        if (deviceType == rtcType.rx8035){
+            buf[0] = REG_SECOND << 4 | 0; 
+            buf[REG_HOUR + 1] = buf[REG_HOUR + 1] | 0x80;   // 24H bit
+        }
+        if (deviceType == rtcType.mcp79410){
+            buf[REG_SECOND + 1] = buf[REG_SECOND + 1] | 0x80;       // Start Clock
+            buf[REG_WEEKDAY + 1] = buf[REG_WEEKDAY + 1] | 0x08;     // Vbat Enable
+        }
 
         pins.i2cWriteBuffer(I2C_ADDR, buf)
     }
