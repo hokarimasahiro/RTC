@@ -28,7 +28,7 @@ namespace rtc {
     let I2C_ADDR = 0x32
     let REG_CTRL = 0x0f
     let REG_SECOND = 0x0
-    let weekStart = 1
+    let weekStart = 0   // 0:0-6 1:1-7
     let REG_SEQ = 0     // 0:SECOND,MINUTE,HOUR,WEEKDAY,DAY,MONTH,YEAR  1:0:SECOND,MINUTE,HOUR,DAY,WEEKDAY,MONTH,YEAR
     //% shim=rtc::testi2cr
     function testi2cr(n: number): number {
@@ -91,27 +91,27 @@ namespace rtc {
 
         switch (deviceType) {
             case rtcType.ds1307: 
-                I2C_ADDR = 0x68; REG_CTRL = 0x07; REG_SECOND = 0x00; REG_SEQ = 0;
+                I2C_ADDR = 0x68; REG_CTRL = 0x07; REG_SECOND = 0x00; REG_SEQ = 0;weekStart = 1;
                 break;
             case rtcType.ds3231:
-                I2C_ADDR = 0x68; REG_CTRL = 0x07; REG_SECOND = 0x00; REG_SEQ = 0
+                I2C_ADDR = 0x68; REG_CTRL = 0x07; REG_SECOND = 0x00; REG_SEQ = 0; weekStart = 1;
                 break;
             case rtcType.pcf2129:
-                I2C_ADDR = 0x51; REG_CTRL = 0x00; REG_SECOND = 0x03; REG_SEQ = 1;
+                I2C_ADDR = 0x51; REG_CTRL = 0x00; REG_SECOND = 0x03; REG_SEQ = 1; weekStart = 0;
                 setReg(REG_CTRL, 0x08)
                 break;
             case rtcType.pcf8523:
-                I2C_ADDR = 0x58; REG_CTRL = 0x00; REG_SECOND = 0x03; REG_SEQ = 1;
+                I2C_ADDR = 0x58; REG_CTRL = 0x00; REG_SECOND = 0x03; REG_SEQ = 1; weekStart = 0;
                 break;
             case rtcType.pcf85063:
-                I2C_ADDR = 0x51; REG_CTRL = 0x00; REG_SECOND = 0x04; REG_SEQ = 1;
+                I2C_ADDR = 0x51; REG_CTRL = 0x00; REG_SECOND = 0x04; REG_SEQ = 1; weekStart = 0;
                 break;
             case rtcType.mcp79410:
-                I2C_ADDR = 0x6f; REG_CTRL = 0x07; REG_SECOND = 0x00; REG_SEQ = 0;
+                I2C_ADDR = 0x6f; REG_CTRL = 0x07; REG_SECOND = 0x00; REG_SEQ = 0; weekStart = 1;
                 setReg(REG_SECOND, getReg(REG_SECOND) || 0x80)
                 break;
             case rtcType.rx8035:
-                I2C_ADDR = 0x32; REG_CTRL = 0x0f; REG_SECOND = 0x00; REG_SEQ = 0;
+                I2C_ADDR = 0x32; REG_CTRL = 0x0f; REG_SECOND = 0x00; REG_SEQ = 0; weekStart = 0;
                 break;
             default:
                 I2C_ADDR = 0x32; REG_CTRL = 0x0f; REG_SECOND = 0x00; REG_SEQ = 0;
