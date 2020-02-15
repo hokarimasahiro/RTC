@@ -94,7 +94,8 @@ namespace rtc {
                 I2C_ADDR = 0x68; REG_CTRL = 0x07; REG_SECOND = 0x00; REG_SEQ = 0;weekStart = 1;
                 break;
             case rtcType.ds3231:
-                I2C_ADDR = 0x68; REG_CTRL = 0x07; REG_SECOND = 0x00; REG_SEQ = 0; weekStart = 1;
+                I2C_ADDR = 0x68; REG_CTRL = 0x0e; REG_SECOND = 0x00; REG_SEQ = 0; weekStart = 1;
+                setReg(REG_CTRL, 0x1c)
                 break;
             case rtcType.pcf2129:
                 I2C_ADDR = 0x51; REG_CTRL = 0x00; REG_SECOND = 0x03; REG_SEQ = 1; weekStart = 0;
