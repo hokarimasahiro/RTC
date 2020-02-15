@@ -90,16 +90,14 @@ namespace rtc {
         deviceType = devType;
 
         switch (deviceType) {
-            case rtcType.ds1307: 
-                I2C_ADDR = 0x68; REG_CTRL = 0x07; REG_SECOND = 0x00; REG_SEQ = 0;weekStart = 1;
+            case rtcType.ds1307:
+                I2C_ADDR = 0x68; REG_CTRL = 0x07; REG_SECOND = 0x00; REG_SEQ = 0; weekStart = 1;
                 break;
             case rtcType.ds3231:
                 I2C_ADDR = 0x68; REG_CTRL = 0x0e; REG_SECOND = 0x00; REG_SEQ = 0; weekStart = 1;
-                setReg(REG_CTRL, 0x1c)
                 break;
             case rtcType.pcf2129:
                 I2C_ADDR = 0x51; REG_CTRL = 0x00; REG_SECOND = 0x03; REG_SEQ = 1; weekStart = 0;
-                setReg(REG_CTRL, 0x08)
                 break;
             case rtcType.pcf8523:
                 I2C_ADDR = 0x58; REG_CTRL = 0x00; REG_SECOND = 0x03; REG_SEQ = 1; weekStart = 0;
@@ -115,7 +113,30 @@ namespace rtc {
                 I2C_ADDR = 0x32; REG_CTRL = 0x0f; REG_SECOND = 0x00; REG_SEQ = 0; weekStart = 0;
                 break;
             default:
-                I2C_ADDR = 0x32; REG_CTRL = 0x0f; REG_SECOND = 0x00; REG_SEQ = 0;
+                I2C_ADDR = 0x32; REG_CTRL = 0x0f; REG_SECOND = 0x00; REG_SEQ = 0; weekStart = 0;
+                break;
+        }
+
+        if (testi2cr(I2C_ADDR) != 0) return -1;
+
+        switch (deviceType) {
+            case rtcType.ds1307:
+                break;
+            case rtcType.ds3231:
+                setReg(REG_CTRL, 0x1c)
+                break;
+            case rtcType.pcf2129:
+                setReg(REG_CTRL, 0x08)
+                break;
+            case rtcType.pcf8523:
+                break;
+            case rtcType.pcf85063:
+                break;
+            case rtcType.mcp79410:
+                break;
+            case rtcType.rx8035:
+                break;
+            default:
                 break;
         }
 
@@ -141,7 +162,7 @@ namespace rtc {
         buf[1] = DecToHex(second);
         buf[2] = DecToHex(minute);
         buf[3] = DecToHex(hour);
-        if (REG_SEQ == 0){
+        if (REG_SEQ == 0) {
             buf[4] = DecToHex(weekday + weekStart);
             buf[5] = DecToHex(day);
         } else {
@@ -150,11 +171,11 @@ namespace rtc {
         }
         buf[6] = DecToHex(month);
         buf[7] = DecToHex(year);
-        if (deviceType == rtcType.rx8035){
-            buf[0] = REG_SECOND << 4 | 0; 
+        if (deviceType == rtcType.rx8035) {
+            buf[0] = REG_SECOND << 4 | 0;
             buf[3] = buf[3] | 0x80;   // 24H bit
         }
-        if (deviceType == rtcType.mcp79410){
+        if (deviceType == rtcType.mcp79410) {
             buf[1] = buf[1] | 0x80;       // Start Clock
             buf[4] = buf[4] | 0x08;     // Vbat Enable
         }
@@ -182,7 +203,7 @@ namespace rtc {
 
         retbuf[0] = HexToDec(buf[6 + offset])            // year
         retbuf[1] = HexToDec(buf[5 + offset] & 0x1f)    // month
-        if (REG_SEQ == 0){
+        if (REG_SEQ == 0) {
             retbuf[2] = HexToDec(buf[4 + offset] & 0x3f)      // day
             retbuf[3] = HexToDec(buf[3 + offset] & 0x07) - weekStart;
         } else {
@@ -206,24 +227,5 @@ namespace rtc {
             retbuf[i] = buf[i]
         }
         return retbuf;
-    }
-    /**
-     * start
-     */
-    //* @param devType device type, eg:ds1307
-    //% blockId="start" block="start %devType"
-    //% weight=44 blockGap=8
-    export function start(devType: rtcType): number {
-        setDevice(devType)
-        
-        switch (deviceType) {
-            case rtcType.mcp79410:
-                setReg(REG_SECOND, getReg(REG_SECOND) || 0x80)
-                break;
-            default:
-                setReg(REG_CTRL, 0);
-                break;
-        }
-        return testi2cr(I2C_ADDR);
     }
 }
