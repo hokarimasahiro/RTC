@@ -2,10 +2,10 @@
  * makecode RTC Package.
  */
 enum rtcType {
-    // % block="DS1307"
-    ds1307 = 0,
     // % block="DS3231"
-    ds3231 = 1,
+    ds3231 = 0,
+    // % block="DS1307"
+    ds1307 = 1,
     // % block="PCF2129"
     pcf2129 = 2,
     // % block="PCF8523"
@@ -80,6 +80,17 @@ namespace rtc {
     }
 
     /**
+     * get device
+     */
+    //% blockId="getDevice" block="get device"
+    //% weight=80 blockGap=8
+    export function getDevice():number{
+        for(let i=0;1<7;i++){
+            if(setDevice(i) != -1) return i; 
+        }
+        return -1;
+    }
+    /**
      * set device
      */
     //* @param devType device type, eg:ds1307
@@ -90,11 +101,11 @@ namespace rtc {
         deviceType = devType;
 
         switch (deviceType) {
-            case rtcType.ds1307:
-                I2C_ADDR = 0x68; REG_CTRL = 0x07; REG_SECOND = 0x00; REG_SEQ = 0; weekStart = 1;
-                break;
             case rtcType.ds3231:
                 I2C_ADDR = 0x68; REG_CTRL = 0x0e; REG_SECOND = 0x00; REG_SEQ = 0; weekStart = 1;
+                break;
+            case rtcType.ds1307:
+                I2C_ADDR = 0x68; REG_CTRL = 0x07; REG_SECOND = 0x00; REG_SEQ = 0; weekStart = 1;
                 break;
             case rtcType.pcf2129:
                 I2C_ADDR = 0x51; REG_CTRL = 0x00; REG_SECOND = 0x03; REG_SEQ = 1; weekStart = 0;
