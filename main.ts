@@ -17,6 +17,22 @@ enum rtcType {
     // % block="rx8035"
     rx8035 = 6
 }
+enum clockData {
+    // % block="年"
+    year = 0,
+    // % block="月"
+    month = 1,
+    // % block="日"
+    day = 2,
+    // % block="曜日"
+    weekday = 3,
+    // % block="時"
+    hour = 4,
+    // % block="分"
+    minute = 5,
+    // % block="秒"
+    second = 6
+}
 
 /**
  * RTC block
@@ -225,6 +241,15 @@ namespace rtc {
         retbuf[5] = HexToDec(buf[1 + offset] & 0x7f)   // minute
         retbuf[6] = HexToDec(buf[0 + offset] & 0x7f)   // second
         return retbuf;
+    }
+
+    /**
+     * getClockData
+     */
+    //* @param clockData, eg:clockData.year
+    //% blockId="getClockData" block="get clock data %clockData"
+    export function getClockData(dt:clockData):clockData{
+        return dt;
     }
     /**
      * get RTC RAW DATA
