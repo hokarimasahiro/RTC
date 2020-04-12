@@ -15,7 +15,9 @@ enum rtcType {
     // % block="pcf85063"
     pcf85063 = 5,
     // % block="DS3231"
-    ds1307 = 6
+    ds1307 = 6,
+    // % block="NON"
+    NON = -1
 }
 enum clockData {
     // % block="年"
