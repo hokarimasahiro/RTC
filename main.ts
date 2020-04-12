@@ -263,6 +263,14 @@ namespace rtc {
         return dt;
     }
     /**
+     * getClockDevice
+     */
+    //* @param clockDevice, eg:rtcType.ds3231
+    //% blockId="getClockDevice" block="device %clockData"
+    export function getClockDevice(dt: rtcType): rtcType {
+        return dt;
+    }
+    /**
      * get RTC RAW DATA
      */
     //% blockId="getRawData" block="get RTC RAW data"
