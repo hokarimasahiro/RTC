@@ -4,18 +4,18 @@
 enum rtcType {
     // % block="DS3231"
     ds3231 = 0,
-    // % block="DS1307"
-    ds1307 = 1,
-    // % block="PCF2129"
-    pcf2129 = 2,
-    // % block="PCF8523"
-    pcf8523 = 3,
-    // % block="pcf85063"
-    pcf85063 = 4,
     // % block="MCP79410"
-    mcp79410 = 5,
+    mcp79410 = 1,
     // % block="rx8035"
-    rx8035 = 6
+    rx8035 = 2,
+    // % block="PCF2129"
+    pcf2129 = 3,
+    // % block="PCF8523"
+    pcf8523 = 4,
+    // % block="pcf85063"
+    pcf85063 = 5,
+    // % block="DS3231"
+    ds1307 = 6
 }
 enum clockData {
     // % block="年"
@@ -101,7 +101,7 @@ namespace rtc {
     //% blockId="getDevice" block="get device"
     //% weight=80 blockGap=8
     export function getDevice():number{
-        for(let i=0;1<7;i++){
+        for(let i=0;1<4;i++){
             if(setDevice(i) != -1) return i; 
         }
         return -1;
@@ -120,8 +120,12 @@ namespace rtc {
             case rtcType.ds3231:
                 I2C_ADDR = 0x68; REG_CTRL = 0x0e; REG_SECOND = 0x00; REG_SEQ = 0; weekStart = 1;
                 break;
-            case rtcType.ds1307:
-                I2C_ADDR = 0x68; REG_CTRL = 0x07; REG_SECOND = 0x00; REG_SEQ = 0; weekStart = 1;
+            case rtcType.mcp79410:
+                I2C_ADDR = 0x6f; REG_CTRL = 0x07; REG_SECOND = 0x00; REG_SEQ = 0; weekStart = 1;
+                setReg(REG_SECOND, getReg(REG_SECOND) || 0x80)
+                break;
+            case rtcType.rx8035:
+                I2C_ADDR = 0x32; REG_CTRL = 0x0f; REG_SECOND = 0x00; REG_SEQ = 0; weekStart = 0;
                 break;
             case rtcType.pcf2129:
                 I2C_ADDR = 0x51; REG_CTRL = 0x00; REG_SECOND = 0x03; REG_SEQ = 1; weekStart = 0;
@@ -132,15 +136,11 @@ namespace rtc {
             case rtcType.pcf85063:
                 I2C_ADDR = 0x51; REG_CTRL = 0x00; REG_SECOND = 0x04; REG_SEQ = 1; weekStart = 0;
                 break;
-            case rtcType.mcp79410:
-                I2C_ADDR = 0x6f; REG_CTRL = 0x07; REG_SECOND = 0x00; REG_SEQ = 0; weekStart = 1;
-                setReg(REG_SECOND, getReg(REG_SECOND) || 0x80)
+            case rtcType.ds1307:
+                I2C_ADDR = 0x68; REG_CTRL = 0x07; REG_SECOND = 0x00; REG_SEQ = 0; weekStart = 1;
                 break;
-            case rtcType.rx8035:
-                I2C_ADDR = 0x32; REG_CTRL = 0x0f; REG_SECOND = 0x00; REG_SEQ = 0; weekStart = 0;
-                break;
-            default:
-                I2C_ADDR = 0x32; REG_CTRL = 0x0f; REG_SECOND = 0x00; REG_SEQ = 0; weekStart = 0;
+            default: // DS3231
+                I2C_ADDR = 0x68; REG_CTRL = 0x0e; REG_SECOND = 0x00; REG_SEQ = 0; weekStart = 1;
                 break;
         }
 
