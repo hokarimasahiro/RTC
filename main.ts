@@ -104,7 +104,7 @@ namespace rtc {
     //% weight=80 blockGap=8
     export function getDevice():number{
         for(let i=0;1<4;i++){
-            if(setDevice(i) != -1) return i; 
+            if(setDevice(i) == 0) return i; 
         }
         return -1;
     }
