@@ -256,7 +256,7 @@ namespace rtc {
      * getClockData
      */
     //* @param clockData, eg:clockData.year
-    //% blockId="getClockData" block="get clock data %clockData"
+    //% blockId="getClockData" block="clock %clockData"
     export function getClockData(dt:clockData):clockData{
         return dt;
     }
