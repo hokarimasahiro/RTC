@@ -170,6 +170,15 @@ namespace rtc {
         return (testi2cr(I2C_ADDR));
     }
     /**
+     * set clock array
+     * @param array of time data
+     */
+    //% blockId="setClockArray" block="set clock %timeArray"
+    export function setClockArray(tm:number[]):void{
+        setClock(tm[0],tm[1],tm[2],tm[3],tm[4],tm[5],tm[6]);
+    }
+
+    /**
      * set clock
      * @param year data of year, eg: 2019
      * @param month data of month, eg: 3
