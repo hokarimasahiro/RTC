@@ -102,9 +102,9 @@ namespace rtc {
      */
     //% blockId="getDevice" block="get device"
     //% weight=80 blockGap=8
-    export function getDevice():number{
-        for(let i=0;1<4;i++){
-            if(setDevice(i) == 0) return i; 
+    export function getDevice(): number {
+        for (let i = 0; i < 4; i++) {
+            if (setDevice(i) == 0) return i;
         }
         return -1;
     }
@@ -176,8 +176,8 @@ namespace rtc {
      * @param array of time data
      */
     //% blockId="setClockArray" block="set clock %timeArray"
-    export function setClockArray(tm:number[]):void{
-        setClock(tm[0],tm[1],tm[2],tm[3],tm[4],tm[5],tm[6]);
+    export function setClockArray(tm: number[]): void {
+        setClock(tm[0], tm[1], tm[2], tm[3], tm[4], tm[5], tm[6]);
     }
 
     /**
@@ -259,7 +259,7 @@ namespace rtc {
      */
     //* @param clockData, eg:clockData.year
     //% blockId="getClockData" block="clock %clockData"
-    export function getClockData(dt:clockData):clockData{
+    export function getClockData(dt: clockData): clockData {
         return dt;
     }
     /**
