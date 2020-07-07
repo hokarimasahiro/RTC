@@ -5,6 +5,6 @@ basic.forever(function () {
     basic.showString("a")
     basic.pause(2000);
     basic.clearScreen()
-    basic.showNumber(rtc.setDevice(rtcType.ds3231))
+    basic.showNumber(rtc.getDevice())
     basic.pause(2000);
 })

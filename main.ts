@@ -6,15 +6,15 @@ enum rtcType {
     ds3231 = 0,
     // % block="MCP79410"
     mcp79410 = 1,
-    // % block="rx8035"
+    // % block="RX8035"
     rx8035 = 2,
     // % block="PCF2129"
     pcf2129 = 3,
     // % block="PCF8523"
     pcf8523 = 4,
-    // % block="pcf85063"
+    // % block="PCF85063"
     pcf85063 = 5,
-    // % block="DS3231"
+    // % block="DS1307"
     ds1307 = 6,
     // % block="NON"
     NON = -1
@@ -103,7 +103,7 @@ namespace rtc {
     //% blockId="getDevice" block="get device"
     //% weight=80 blockGap=8
     export function getDevice(): number {
-        for (let i = 0; i < 4; i++) {
+        for (let i = 0; i < 6; i++) {
             if (setDevice(i) == 0) return i;
         }
         return -1;

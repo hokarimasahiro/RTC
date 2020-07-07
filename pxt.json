@@ -15,8 +15,10 @@
         "test.ts"
     ],
     "public": false,
+    "supportedTargets": [
+        "microbit"
+    ],
     "preferredEditor": "tsprj",
-    "installedVersion": "workspace:78f82730-1796-4ffb-7e53-142acb6afd61",
     "yotta": {
         "config": {
             "microbit-dal": {
