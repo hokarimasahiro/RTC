@@ -50,11 +50,11 @@ namespace rtc {
     let REG_SEQ = 0     // 0:SECOND,MINUTE,HOUR,WEEKDAY,DAY,MONTH,YEAR  1:0:SECOND,MINUTE,HOUR,DAY,WEEKDAY,MONTH,YEAR
     //% shim=rtc::testi2cr
     function testi2cr(n: number): number {
-        return 0;
+        return -1;
     }
     //% shim=rtc::testi2cw
     function testi2cw(n: number): number {
-        return 0;
+        return -1;
     }
     /**
       * test read i2c device
